@@ -234,10 +234,10 @@ func (h *MultiUsersSvc) Login(c *gin.Context) {
 		Value:    token,
 		MaxAge:   ttl, // MaxAge is in seconds
 		Path:     "/",
-		Domain:   ".app.github.dev", // Or ".yourdomain.com" for production
-		Secure:   false,             // Set to true for HTTPS in production
+		Domain:   "localhost", // Or ".yourdomain.com" for production
+		Secure:   true,        // Set to true for HTTPS in production
 		HttpOnly: false,
-		SameSite: http.SameSiteLaxMode, // Or http.SameSiteLaxMode, http.SameSiteStrictMode
+		SameSite: http.SameSiteNoneMode, // Or http.SameSiteLaxMode, http.SameSiteStrictMode
 	}
 	// If SameSite is None, Secure MUST be true.
 	// If you're on http://localhost, use SameSiteLaxMode or StrictMode for now.

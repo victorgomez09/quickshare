@@ -42,7 +42,7 @@ users:
   limiterCyc: 1000 # 1s
   predefinedUsers:
     - name: "demo"
-      pwd: "Quicksh@re"
+      pwd: "demo"
       role: "user"
 workers:
   queueSize: 1024

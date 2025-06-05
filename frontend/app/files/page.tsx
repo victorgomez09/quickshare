@@ -1,9 +1,18 @@
-import { title } from "@/components/primitives";
+import { getMe } from "@/api/user";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { FilesPageClient } from "./page-client";
 
-export default function PricingPage() {
+export default async function FilesPage() {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["getMe"],
+    queryFn: getMe
+  })
+
   return (
-    <div>
-      <h1 className={title()}>Pricing</h1>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <FilesPageClient />
+    </HydrationBoundary>
   );
 }
