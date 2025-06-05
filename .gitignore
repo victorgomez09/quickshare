@@ -2,7 +2,6 @@
 **/*.bundle.js
 **/*.js.map
 **/coverage
-**/files
 **/node_modules/*
 **/yarn-error
 **/static/public/js/*.js
@@ -11,7 +10,6 @@
 
 # backend
 **/*/quickshare.db
-# **/*/files/
 **/*/uploadings/
 
 # build
