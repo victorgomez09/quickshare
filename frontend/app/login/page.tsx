@@ -90,8 +90,8 @@ export default function LoginPage() {
                     setAction(`submit ${JSON.stringify(data)}`);
                     await mutation.mutateAsync(data)
 
-                    if (mutation.data && mutation.data.msg === "OK") {
-                        console.log('INSIDE')
+                    if (mutation.data && mutation.data.token) {
+                        localStorage.setItem("TOKEN", mutation.data.token)
                         redirect('/')
                     }
                 }}

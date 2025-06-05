@@ -234,9 +234,9 @@ func (h *MultiUsersSvc) Login(c *gin.Context) {
 		Value:    token,
 		MaxAge:   ttl, // MaxAge is in seconds
 		Path:     "/",
-		Domain:   "didactic-funicular-6r7j9rxgjgj2x66w-3000.app.github.dev", // Or ".yourdomain.com" for production
-		Secure:   false,                                                     // Set to true for HTTPS in production
-		HttpOnly: true,
+		Domain:   ".app.github.dev", // Or ".yourdomain.com" for production
+		Secure:   false,             // Set to true for HTTPS in production
+		HttpOnly: false,
 		SameSite: http.SameSiteLaxMode, // Or http.SameSiteLaxMode, http.SameSiteStrictMode
 	}
 	// If SameSite is None, Secure MUST be true.
@@ -249,7 +249,7 @@ func (h *MultiUsersSvc) Login(c *gin.Context) {
 	}
 	http.SetCookie(c.Writer, cookie)
 
-	c.JSON(q.Resp(200))
+	c.JSON(200, gin.H{"token": token})
 }
 
 type LogoutReq struct{}
