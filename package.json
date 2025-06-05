@@ -11,6 +11,5 @@
     "build": "yarn build:fe && bash scripts/build_be.sh",
     "build:docker": "docker build . -f Dockerfile_default -t hexxa/quickshare:latest",
     "build:docker:heroku": "docker build . -t hexxa/quickshare:latest"
-  },
-  "dependencies": {}
+  }
 }

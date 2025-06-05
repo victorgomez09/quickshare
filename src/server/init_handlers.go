@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -32,6 +34,14 @@ func (it *Initer) InitHandlers(deps *depidx.Deps) (*gin.Engine, error) {
 	// middlewares
 	router.Use(userHdrs.AuthN())
 	router.Use(userHdrs.APIAccessControl())
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000", "https://didactic-funicular-6r7j9rxgjgj2x66w-3000.app.github.dev"}, // Your Next.js origin(s)
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length", "Set-Cookie"}, // Essential for "Set-Cookie" header
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	publicPath, ok := it.cfg.String("Fs.PublicPath")
 	if !ok || publicPath == "" {

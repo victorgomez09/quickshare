@@ -16,6 +16,7 @@ type SQLite struct {
 }
 
 func NewSQLite(dbPath string) (*SQLite, error) {
+	println("SQLite path", dbPath)
 	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, err

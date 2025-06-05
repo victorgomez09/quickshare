@@ -3,11 +3,12 @@ package multiusers
 import (
 	"errors"
 	"fmt"
+	"log"
+	"net/http"
 	"path/filepath"
 	"strconv"
 	"time"
 
-	"github.com/dchest/captcha"
 	"github.com/gin-gonic/gin"
 	"github.com/ihexxa/gocfg"
 	qradix "github.com/ihexxa/q-radix/v3"
@@ -189,13 +190,13 @@ func (h *MultiUsersSvc) Login(c *gin.Context) {
 	}
 
 	// TODO: add rate limiter for verifying
-	captchaEnabled := h.cfg.BoolOr("Users.CaptchaEnabled", true)
-	if captchaEnabled {
-		if !captcha.VerifyString(req.CaptchaID, req.CaptchaInput) {
-			c.JSON(q.ErrResp(c, 403, errors.New("login failed")))
-			return
-		}
-	}
+	// captchaEnabled := h.cfg.BoolOr("Users.CaptchaEnabled", true)
+	// if captchaEnabled {
+	// 	if !captcha.VerifyString(req.CaptchaID, req.CaptchaInput) {
+	// 		c.JSON(q.ErrResp(c, 403, errors.New("login failed")))
+	// 		return
+	// 	}
+	// }
 
 	user, err := h.deps.Users().GetUserByName(c, req.User)
 	if err != nil {
@@ -225,9 +226,28 @@ func (h *MultiUsersSvc) Login(c *gin.Context) {
 		return
 	}
 
-	secure := h.cfg.GrabBool("Users.CookieSecure")
-	httpOnly := h.cfg.GrabBool("Users.CookieHttpOnly")
-	c.SetCookie(q.TokenCookie, token, ttl, "/", "", secure, httpOnly)
+	// secure := h.cfg.GrabBool("Users.CookieSecure")
+	// httpOnly := h.cfg.GrabBool("Users.CookieHttpOnly")
+	// c.SetCookie(q.TokenCookie, token, ttl, "/", "", secure, httpOnly)
+	cookie := &http.Cookie{
+		Name:     q.TokenCookie,
+		Value:    token,
+		MaxAge:   ttl, // MaxAge is in seconds
+		Path:     "/",
+		Domain:   "didactic-funicular-6r7j9rxgjgj2x66w-3000.app.github.dev", // Or ".yourdomain.com" for production
+		Secure:   false,                                                     // Set to true for HTTPS in production
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode, // Or http.SameSiteLaxMode, http.SameSiteStrictMode
+	}
+	// If SameSite is None, Secure MUST be true.
+	// If you're on http://localhost, use SameSiteLaxMode or StrictMode for now.
+	if cookie.SameSite == http.SameSiteNoneMode && !cookie.Secure {
+		// Browser will reject SameSite=None without Secure
+		// Consider changing SameSite or using HTTPS for local development
+		// Or set Secure to true and use https://localhost (requires setup)
+		log.Println("Warning: SameSite=None cookie without Secure=true will likely be rejected by browsers.")
+	}
+	http.SetCookie(c.Writer, cookie)
 
 	c.JSON(q.Resp(200))
 }
