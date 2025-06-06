@@ -2,13 +2,13 @@
 
 import { login } from "@/api/login";
 import { getMe } from "@/api/user";
-import { useUserStore } from "@/stores/user";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { useMutation } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 import { useState } from "react";
+import { useUser } from "../providers";
 
 export const EyeSlashFilledIcon = (props: any) => {
   return (
@@ -74,7 +74,7 @@ export default function LoginPage() {
   const [_, setAction] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const { setUser } = useUserStore();
+  const { setUser: setUserContext } = useUser();
 
   const mutation = useMutation({
     mutationFn: (data: { [k: string]: FormDataEntryValue }) =>
@@ -95,7 +95,7 @@ export default function LoginPage() {
 
           if (mutation.data && mutation.data.token) {
             localStorage.setItem("TOKEN", mutation.data.token);
-            setUser(await getMe());
+            setUserContext(await getMe())
             redirect("/files");
           }
         }}
