@@ -1,6 +1,7 @@
 import { getFile } from "@/api/file";
 import { Spinner } from "@heroui/spinner";
 import { addToast } from "@heroui/toast";
+import { Card, CardBody } from "@heroui/card";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
@@ -37,7 +38,11 @@ export default function FileDetailsPage() {
 
   return (
     <div className="flex flex-col gap-2">
-      <span>{JSON.stringify(data)}</span>
+      <Card>
+        <CardBody>
+          <span>{JSON.stringify(data)}</span>
+        </CardBody>
+      </Card>
     </div>
   );
 }

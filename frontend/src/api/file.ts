@@ -16,18 +16,23 @@ export const getFiles = async (dirPath: string) => {
 
 export const getFile = async (filePath: string) => {
   return (
-    // return this.do({
-    //   method: "get",
-    //   url: `${this.url}/v2/my/fs/metadata`,
-    //   params: {
-    //     [filePathQuery]: filePath,
-    //   },
-    // });
-    (
-      await axios.get<FilesResponse>(`${API_URL}/v2/my/fs/file/metadata`, {
-        params: { [filePathQuery]: filePath },
-        withCredentials: true,
-      })
-    ).data
+    await axios.get<FilesResponse>(`${API_URL}/v2/my/fs/file/metadata`, {
+      params: { [filePathQuery]: filePath },
+      withCredentials: true,
+    })
+  ).data;
+};
+
+export const downloadFile = async (filePath: string) => {
+  console.log(
+    "test",
+    await axios.get<FilesResponse>(`${API_URL}/v1/fs/files?fp=${filePath}`, {
+      withCredentials: true,
+    })
   );
+  return (
+    await axios.get<FilesResponse>(`${API_URL}/v1/fs/files?fp=${filePath}`, {
+      withCredentials: true,
+    })
+  ).data;
 };
