@@ -38,10 +38,10 @@ export const FileItem: FC<
           label: "w-full",
         }}
       />
-      <div className="w-full flex justify-between gap-2">
+      <div className="w-full flex items-center justify-between gap-2">
         {isDir ? <Folder /> : <FileIcon />}
         <div className="flex items-end justify-between gap-1 w-full">
-          <div className="flex items-center gap-2">
+          <div className="flex items-baseline gap-2">
             <span
               className="text-default-500 text-lg cursor-pointer hover:text-secondary-500"
               onClick={() => handleDoubleClick(name, isDir)}
