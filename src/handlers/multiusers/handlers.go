@@ -234,8 +234,8 @@ func (h *MultiUsersSvc) Login(c *gin.Context) {
 		Value:    token,
 		MaxAge:   ttl, // MaxAge is in seconds
 		Path:     "/",
-		Domain:   "localhost", // Or ".yourdomain.com" for production
-		Secure:   true,        // Set to true for HTTPS in production
+		Domain:   ".app.github.dev", // Or ".yourdomain.com" for production
+		Secure:   true,              // Set to true for HTTPS in production
 		HttpOnly: false,
 		SameSite: http.SameSiteNoneMode, // Or http.SameSiteLaxMode, http.SameSiteStrictMode
 	}
