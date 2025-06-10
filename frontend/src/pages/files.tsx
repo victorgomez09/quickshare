@@ -1,12 +1,10 @@
 import { getFiles } from "@/api/file";
-import { useAuth } from "@/provider";
 import { useQuery } from "@tanstack/react-query";
 import { Spinner } from "@heroui/spinner";
 import { FileItem } from "@/components/file-item";
 import { addToast } from "@heroui/toast";
 
 export default function FilesPage() {
-  const { user } = useAuth();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["getFiles"],
     queryFn: () => getFiles("/"),

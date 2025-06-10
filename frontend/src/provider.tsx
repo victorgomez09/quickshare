@@ -1,13 +1,14 @@
-import { login as loginUser } from '@/api/login';
+import {
+  login as loginUser,
+  logout as logoutUser,
+  logoutAdmin,
+} from "@/api/auth";
 import { getMe } from "@/api/user";
 import { AuthContextType, User } from "@/models/auth";
 import { HeroUIProvider } from "@heroui/system";
 import { ToastProvider } from "@heroui/toast";
-import {
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query';
-import Cookies from 'js-cookie';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { NavigateOptions } from "react-router-dom";
 import { useHref, useNavigate } from "react-router-dom";
@@ -32,7 +33,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const authCookie = Cookies.get('tk');
+      const authCookie = Cookies.get("tk");
       if (authCookie) {
         // If a token exists, try to fetch the user profile to validate it
         const userData = await getMe();
@@ -41,7 +42,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
           setUser(userData);
         } else {
           // Token might be invalid or expired, clear it
-          Cookies.remove('tk');
+          Cookies.remove("tk");
           setIsAuthenticated(false);
           setUser(null);
         }
@@ -56,10 +57,16 @@ export function Provider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true); // Show loading state during login attempt
 
-      const response = await loginUser(credentials.username, credentials.password);
+      const response = await loginUser(
+        credentials.username,
+        credentials.password
+      );
       if (response.status !== 200) {
-        const errorData = await response.data // Get error message from server
-        console.error('Login failed:', errorData.message || response.statusText);
+        const errorData = await response.data; // Get error message from server
+        console.error(
+          "Login failed:",
+          errorData.message || response.statusText
+        );
         setIsAuthenticated(false);
         setUser(null);
         setLoading(false);
@@ -69,10 +76,10 @@ export function Provider({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(true);
       setUser(await getMe()); // Set user data received from the server
       setLoading(false);
-      navigate('/files')
+      navigate("/files");
       return true; // Login successful
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error("Error during login:", error);
       setIsAuthenticated(false);
       setUser(null);
       setLoading(false);
@@ -80,10 +87,18 @@ export function Provider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = () => {
-    Cookies.remove('tk');
+  const logout = async () => {
+    console.log("logout");
+    console.log("user", user?.role);
+    if (user?.role === "admin") {
+      await logoutAdmin();
+    } else {
+      await logoutUser();
+    }
+    Cookies.remove("tk");
     setIsAuthenticated(false);
     setUser(null);
+    console.log("user", user);
   };
 
   const contextValue: AuthContextType = {
@@ -110,7 +125,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === null) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

@@ -11,11 +11,12 @@
   },
   "dependencies": {
     "@heroui/alert": "^2.2.21",
+    "@heroui/avatar": "^2.2.17",
     "@heroui/button": "2.2.21",
     "@heroui/checkbox": "^2.3.20",
     "@heroui/chip": "^2.2.17",
     "@heroui/code": "2.2.16",
-    "@heroui/dropdown": "2.3.21",
+    "@heroui/dropdown": "^2.3.21",
     "@heroui/form": "^2.1.20",
     "@heroui/input": "^2.4.21",
     "@heroui/kbd": "2.2.17",

@@ -25,8 +25,8 @@ server:
         align: "fixed"
 users:
   enableAuth: true
-  defaultAdmin: ""
-  defaultAdminPwd: ""
+  defaultAdmin: "admin"
+  defaultAdminPwd: "admin"
   cookieTTL: 604800 # 1 week
   cookieSecure: false
   cookieHttpOnly: true
@@ -43,7 +43,7 @@ users:
   predefinedUsers:
     - name: "demo"
       pwd: "demo"
-      role: "user"
+      role: "admin"
 workers:
   queueSize: 1024
   sleepCyc: 1 # in second

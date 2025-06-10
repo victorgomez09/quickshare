@@ -78,10 +78,6 @@ func (it *Initer) InitHandlers(deps *depidx.Deps) (*gin.Engine, error) {
 	// rolesAPI.DELETE("/", userHdrs.DelRole)
 	rolesAPI.GET("/list", userHdrs.ListRoles)
 
-	captchaAPI := v1.Group("/captchas")
-	captchaAPI.GET("/", userHdrs.GetCaptchaID)
-	captchaAPI.GET("/imgs", userHdrs.GetCaptchaImg)
-
 	fileHdrs, err := fileshdr.NewFileHandlers(it.cfg, deps)
 	if err != nil {
 		return nil, fmt.Errorf("new files service error: %w", err)
