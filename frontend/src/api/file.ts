@@ -23,16 +23,16 @@ export const getFile = async (filePath: string) => {
   ).data;
 };
 
-export const downloadFile = async (filePath: string) => {
-  console.log(
-    "test",
-    await axios.get<FilesResponse>(`${API_URL}/v1/fs/files?fp=${filePath}`, {
-      withCredentials: true,
-    })
-  );
+export const createDir = async (dirPath: string) => {
   return (
-    await axios.get<FilesResponse>(`${API_URL}/v1/fs/files?fp=${filePath}`, {
-      withCredentials: true,
-    })
+    await axios.post<any>(
+      `${API_URL}/v2/my/fs/dirs`,
+      {
+        path: dirPath,
+      },
+      {
+        withCredentials: true,
+      }
+    )
   ).data;
 };

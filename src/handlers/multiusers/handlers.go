@@ -230,12 +230,13 @@ func (h *MultiUsersSvc) Login(c *gin.Context) {
 	// httpOnly := h.cfg.GrabBool("Users.CookieHttpOnly")
 	// c.SetCookie(q.TokenCookie, token, ttl, "/", "", secure, httpOnly)
 	cookie := &http.Cookie{
-		Name:     q.TokenCookie,
-		Value:    token,
-		MaxAge:   ttl, // MaxAge is in seconds
-		Path:     "/",
-		Domain:   ".app.github.dev", // Or ".yourdomain.com" for production
-		Secure:   true,              // Set to true for HTTPS in production
+		Name:   q.TokenCookie,
+		Value:  token,
+		MaxAge: ttl, // MaxAge is in seconds
+		Path:   "/",
+		// Domain:   ".app.github.dev", // Or ".yourdomain.com" for production
+		Domain:   "localhost", // Or ".yourdomain.com" for production
+		Secure:   true,        // Set to true for HTTPS in production
 		HttpOnly: false,
 		SameSite: http.SameSiteNoneMode, // Or http.SameSiteLaxMode, http.SameSiteStrictMode
 	}

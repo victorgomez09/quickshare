@@ -52,7 +52,7 @@ export const FileItem: FC<
               {moment(modTime).format("YYYY MM DD - HH:mm:ss")}
             </span>
           </div>
-          <span>{convertBytes(size)}</span>
+          {!isDir && <span>{convertBytes(size)}</span>}
         </div>
       </div>
     </div>

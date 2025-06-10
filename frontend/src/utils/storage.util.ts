@@ -1,5 +1,5 @@
 export const getCwd = () => {
-  return localStorage.getItem("cwd") || "/";
+  return localStorage.getItem("cwd") || "/qs/files";
 };
 
 export const setCwd = (cwd: string) => {
