@@ -345,6 +345,49 @@ func (h *FileHandlers) Metadata(c *gin.Context) {
 	})
 }
 
+func (h *FileHandlers) FileMetadata(c *gin.Context) {
+	filePath := c.Query(FilePathQuery)
+	if filePath == "" {
+		c.JSON(q.ErrResp(c, 400, errors.New("invalid file path")))
+		return
+	}
+
+	userId, err := q.GetUserId(c)
+	if err != nil {
+		c.JSON(q.ErrResp(c, 500, err))
+		return
+	}
+
+	role := c.MustGet(q.RoleParam).(string)
+	userName := c.MustGet(q.UserParam).(string)
+	if !h.canAccess(c, userId, userName, role, "metadata", filePath) {
+		c.JSON(q.ErrResp(c, 403, q.ErrAccessDenied))
+		return
+	}
+
+	info, err := h.deps.FS().Stat(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			c.JSON(q.ErrResp(c, 404, os.ErrNotExist))
+		} else {
+			c.JSON(q.ErrResp(c, 500, err))
+		}
+		return
+	}
+
+	result := MetadataResp{
+		Name:    info.Name(),
+		Size:    info.Size(),
+		ModTime: info.ModTime(),
+		IsDir:   info.IsDir(),
+	}
+	dbInfo, _ := h.deps.FileInfos().GetFileInfo(c, filePath)
+	if dbInfo != nil {
+		result.Sha1 = dbInfo.Sha1
+	}
+	c.JSON(200, result)
+}
+
 type MkdirReq struct {
 	Path string `json:"path"`
 }

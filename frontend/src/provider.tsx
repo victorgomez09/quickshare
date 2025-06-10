@@ -1,8 +1,4 @@
-import {
-  login as loginUser,
-  logout as logoutUser,
-  logoutAdmin,
-} from "@/api/auth";
+import { login as loginUser, logout as logoutUser } from "@/api/auth";
 import { getMe } from "@/api/user";
 import { AuthContextType, User } from "@/models/auth";
 import { HeroUIProvider } from "@heroui/system";
@@ -88,14 +84,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
-    console.log("logout");
-    console.log("user", user?.role);
-    if (user?.role === "admin") {
-      await logoutAdmin();
-    } else {
-      await logoutUser();
-    }
-    Cookies.remove("tk");
+    await logoutUser();
     setIsAuthenticated(false);
     setUser(null);
     console.log("user", user);

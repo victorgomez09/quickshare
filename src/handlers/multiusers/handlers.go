@@ -256,9 +256,19 @@ type LogoutReq struct{}
 
 func (h *MultiUsersSvc) Logout(c *gin.Context) {
 	// token alreay verified in the authn middleware
-	secure := h.cfg.GrabBool("Users.CookieSecure")
-	httpOnly := h.cfg.GrabBool("Users.CookieHttpOnly")
-	c.SetCookie(q.TokenCookie, "", 0, "/", "", secure, httpOnly)
+	// secure := h.cfg.GrabBool("Users.CookieSecure")
+	// httpOnly := h.cfg.GrabBool("Users.CookieHttpOnly")
+	cookie := &http.Cookie{
+		Name:     q.TokenCookie,
+		Value:    "",
+		MaxAge:   -1, // MaxAge is in seconds
+		Path:     "/",
+		Domain:   ".app.github.dev", // Or ".yourdomain.com" for production
+		Secure:   true,              // Set to true for HTTPS in production
+		HttpOnly: false,
+		SameSite: http.SameSiteNoneMode, // Or http.SameSiteLaxMode, http.SameSiteStrictMode
+	}
+	http.SetCookie(c.Writer, cookie)
 	c.JSON(q.Resp(200))
 }
 

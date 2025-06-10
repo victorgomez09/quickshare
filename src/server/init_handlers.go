@@ -32,16 +32,16 @@ func (it *Initer) InitHandlers(deps *depidx.Deps) (*gin.Engine, error) {
 	}
 
 	// middlewares
-	router.Use(userHdrs.AuthN())
-	router.Use(userHdrs.APIAccessControl())
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "https://didactic-funicular-6r7j9rxgjgj2x66w-5173.app.github.dev"}, // Your Next.js origin(s)
+		AllowOrigins:     []string{"http://localhost:5173", "https://didactic-funicular-6r7j9rxgjgj2x66w-5173.app.github.dev"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length", "Set-Cookie"}, // Essential for "Set-Cookie" header
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+	router.Use(userHdrs.AuthN())
+	router.Use(userHdrs.APIAccessControl())
 
 	publicPath, ok := it.cfg.String("Fs.PublicPath")
 	if !ok || publicPath == "" {
@@ -197,6 +197,7 @@ func (it *Initer) InitHandlers(deps *depidx.Deps) (*gin.Engine, error) {
 		userFilesAPI.GET("/sharings/ids", fileHdrs.ListSharingIDs)
 
 		userFilesAPI.GET("/metadata", fileHdrs.Metadata)
+		userFilesAPI.GET("/file/metadata", fileHdrs.FileMetadata)
 		userFilesAPI.GET("/search", fileHdrs.SearchItems)
 		userFilesAPI.PUT("/reindex", fileHdrs.Reindex)
 

@@ -102,6 +102,7 @@ func (h *MultiUsersSvc) APIAccessControl() gin.HandlerFunc {
 			return
 		}
 
+		println("apiRuleCname(role, method, accessPath)", apiRuleCname(role, method, accessPath))
 		if h.apiACRules[apiRuleCname(role, method, accessPath)] {
 			c.Next()
 			return

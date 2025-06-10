@@ -1,12 +1,16 @@
-import { FC, useState } from "react";
-import { Checkbox } from "@heroui/checkbox";
-import moment from "moment";
-import { cn } from "@heroui/theme";
 import { File } from "@/models/file";
 import { convertBytes } from "@/utils/bytes.util";
-import { Folder, File as FileIcon } from "lucide-react";
+import { Checkbox } from "@heroui/checkbox";
+import { cn } from "@heroui/theme";
+import { File as FileIcon, Folder } from "lucide-react";
+import moment from "moment";
+import { FC, useState } from "react";
 
-export const FileItem: FC<File> = ({ name, size, modTime, isDir }) => {
+export const FileItem: FC<
+  File & {
+    handleDoubleClick: (name: string, isDir: boolean) => void;
+  }
+> = ({ name, size, modTime, isDir, handleDoubleClick }) => {
   const [isSelected, setIsSelected] = useState(false);
 
   return (
@@ -17,12 +21,14 @@ export const FileItem: FC<File> = ({ name, size, modTime, isDir }) => {
           "inline-flex items-center w-full !max-w-full bg-content1",
           "hover:bg-content2 items-center justify-start",
           "cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-          "data-[selected=true]:border-primary"
+          "data-[selected=true]:border-secondary"
         ),
         label: "w-full",
       }}
+      color="secondary"
       isSelected={isSelected}
       onValueChange={setIsSelected}
+      onDoubleClick={() => handleDoubleClick(name, isDir)}
     >
       <div className="w-full flex justify-between gap-2">
         {isDir ? <Folder /> : <FileIcon />}
