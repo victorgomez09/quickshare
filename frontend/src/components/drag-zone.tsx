@@ -1,3 +1,5 @@
+import { Listbox, ListboxItem } from "@heroui/listbox";
+import { Card, CardHeader, CardBody } from "@heroui/card";
 import React, {
   useState,
   useRef,
@@ -240,131 +242,158 @@ export const DragAndDropFileUpload: React.FC<DragAndDropFileUploadProps> = ({
   }, [selectedFiles, onUpload]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 font-inter absolute w-6/12 h-6/12">
+    <>
+      {/* <div className="flex flex-col items-center justify-center p-4 font-inter absolute w-6/12 h-6/12"> */}
       {/* The main container for the upload component */}
-      <div className="w-full p-8 rounded-xl shadow-2xl z-10">
-        {/* Global Drag and Drop Overlay - Conditionally rendered */}
-        {showGlobalDropzone && (
-          <div
-            className={`
+      {/* <div className="w-full p-8 rounded-xl shadow-2xl z-10"> */}
+      // {/* Global Drag and Drop Overlay - Conditionally rendered */}
+      {showGlobalDropzone && (
+        <div
+          className={`
               inset-0 bg-opacity-70 flex flex-col items-center justify-center rounded-xl transition-all duration-300 ease-in-out
               ${isDraggingOverDropzone ? "border-4 border-white transform scale-105" : "border-4 border-blue-300"}
               z-20
             `}
-            onDragOver={handleDropzoneDragOver}
-            onDragLeave={handleDropzoneDragLeave}
-            onDrop={handleDropzoneDrop}
-            onClick={handleAreaClick} // Allow clicking the overlay to open file dialog too
+          onDragOver={handleDropzoneDragOver}
+          onDragLeave={handleDropzoneDragLeave}
+          onDrop={handleDropzoneDrop}
+          onClick={handleAreaClick} // Allow clicking the overlay to open file dialog too
+        >
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileInputChange}
+            multiple
+            className="hidden"
+            accept={allowedFileTypes.join(",")} // Use accept attribute for file dialog filtering
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={`h-32 w-32 mb-8 ${isDraggingOverDropzone ? "text-white" : "text-blue-200"}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="1.5"
           >
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileInputChange}
-              multiple
-              className="hidden"
-              accept={allowedFileTypes.join(",")} // Use accept attribute for file dialog filtering
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
             />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-32 w-32 mb-8 ${isDraggingOverDropzone ? "text-white" : "text-blue-200"}`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
-            <p className="text-white text-4xl font-extrabold text-center drop-shadow-lg">
-              Drop Your Files Here!
-            </p>
-            <p className="text-white text-lg mt-4 opacity-80">
-              Max {maxFiles} files.{" "}
-              {allowedFileTypes.length > 0 &&
-                `Allowed types: ${allowedFileTypes.join(", ").toUpperCase()}`}
-            </p>
-          </div>
-        )}
-
-        {/* Display Message */}
-        {message && (
-          <p
-            className={`mt-4 p-3 rounded-md text-sm ${message.includes("success") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
-          >
-            {message}
+          </svg>
+          <p className="text-white text-4xl font-extrabold text-center drop-shadow-lg">
+            Drop Your Files Here!
           </p>
-        )}
-
-        {/* Selected Files List */}
-        {selectedFiles.length > 0 && (
-          <div className="mt-6 border-t border-gray-200 pt-6">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">
-              Selected Files ({selectedFiles.length})
-            </h3>
-            <ul className="space-y-3">
-              {selectedFiles.map((file) => (
-                <li
-                  key={`${file.name}-${file.lastModified}`} // Unique key for list items
-                  className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-gray-200"
-                >
-                  <div className="flex items-center flex-grow">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-indigo-500 mr-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                      />
-                    </svg>
+          <p className="text-white text-lg mt-4 opacity-80">
+            Max {maxFiles} files.{" "}
+            {allowedFileTypes.length > 0 &&
+              `Allowed types: ${allowedFileTypes.join(", ").toUpperCase()}`}
+          </p>
+        </div>
+      )}
+      {/* Display Message */}
+      {message && (
+        <p
+          className={`mt-4 p-3 rounded-md text-sm ${message.includes("success") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+        >
+          {message}
+        </p>
+      )}
+      {/* Selected Files List */}
+      {
+        selectedFiles.length > 0 && (
+          <Card className="m-2 py-4 fixed bottom-0 right-0">
+            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+              <p className="text-tiny uppercase font-bold">Selected Files</p>
+              <small className="text-default-500">{selectedFiles.length}</small>
+            </CardHeader>
+            <CardBody className="overflow-visible py-2">
+              <Listbox
+                aria-label="Dynamic Actions"
+                items={selectedFiles}
+                onAction={(key) => alert(key)}
+              >
+                {(file) => (
+                  <ListboxItem
+                    key={`${file.name}-${file.lastModified}`} // Unique key for list items
+                    color={"default"}
+                  >
                     <span className="text-gray-700 font-medium truncate">
                       {file.name}
                       <span className="text-sm text-gray-500 ml-2">
                         ({(file.size / 1024 / 1024).toFixed(2)} MB)
                       </span>
                     </span>
-                  </div>
-                  <button
-                    onClick={() => handleRemoveFile(file)}
-                    className="ml-4 p-2 rounded-full text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition-all duration-200"
-                    aria-label={`Remove ${file.name}`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Upload Button */}
-        {selectedFiles.length > 0 && (
-          <div className="mt-8 flex justify-center">
-            <button
-              onClick={handleUploadClick}
-              disabled={uploading}
-              className={`
+                  </ListboxItem>
+                )}
+              </Listbox>
+            </CardBody>
+          </Card>
+        )
+        // <div className="mt-6 border-t border-gray-200 pt-6 absolute">
+        //   <h3 className="text-xl font-semibold text-gray-700 mb-4">
+        //     Selected Files ({selectedFiles.length})
+        //   </h3>
+        //   <ul className="space-y-3">
+        //     {selectedFiles.map((file) => (
+        //       <li
+        //         key={`${file.name}-${file.lastModified}`} // Unique key for list items
+        //         className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-gray-200"
+        //       >
+        //         <div className="flex items-center flex-grow">
+        //           <svg
+        //             xmlns="http://www.w3.org/2000/svg"
+        //             className="h-6 w-6 text-indigo-500 mr-3"
+        //             fill="none"
+        //             viewBox="0 0 24 24"
+        //             stroke="currentColor"
+        //             strokeWidth="2"
+        //           >
+        //             <path
+        //               strokeLinecap="round"
+        //               strokeLinejoin="round"
+        //               d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+        //             />
+        //           </svg>
+        //           <span className="text-gray-700 font-medium truncate">
+        //             {file.name}
+        //             <span className="text-sm text-gray-500 ml-2">
+        //               ({(file.size / 1024 / 1024).toFixed(2)} MB)
+        //             </span>
+        //           </span>
+        //         </div>
+        //         <button
+        //           onClick={() => handleRemoveFile(file)}
+        //           className="ml-4 p-2 rounded-full text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition-all duration-200"
+        //           aria-label={`Remove ${file.name}`}
+        //         >
+        //           <svg
+        //             xmlns="http://www.w3.org/2000/svg"
+        //             className="h-5 w-5"
+        //             fill="none"
+        //             viewBox="0 0 24 24"
+        //             stroke="currentColor"
+        //             strokeWidth="2"
+        //           >
+        //             <path
+        //               strokeLinecap="round"
+        //               strokeLinejoin="round"
+        //               d="M6 18L18 6M6 6l12 12"
+        //             />
+        //           </svg>
+        //         </button>
+        //       </li>
+        //     ))}
+        //   </ul>
+        // </div>
+      }
+      {/* Upload Button */}
+      {selectedFiles.length > 0 && (
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={handleUploadClick}
+            disabled={uploading}
+            className={`
                 px-8 py-3 rounded-full text-white font-semibold shadow-lg
                 transition-all duration-300 ease-in-out transform
                 ${
@@ -373,38 +402,39 @@ export const DragAndDropFileUpload: React.FC<DragAndDropFileUploadProps> = ({
                     : "bg-indigo-600 hover:bg-indigo-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 }
               `}
-            >
-              {uploading ? (
-                <span className="flex items-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Uploading...
-                </span>
-              ) : (
-                "Upload All Files"
-              )}
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+          >
+            {uploading ? (
+              <span className="flex items-center">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Uploading...
+              </span>
+            ) : (
+              "Upload All Files"
+            )}
+          </button>
+        </div>
+      )}
+      {/* </div> */}
+      {/* </div> */}
+    </>
   );
 };
