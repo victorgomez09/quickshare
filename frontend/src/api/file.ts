@@ -25,7 +25,7 @@ export const getFile = async (filePath: string) => {
 
 export const createDir = async (dirPath: string) => {
   return (
-    await axios.post<any>(
+    await axios.post<{ msg: string }>(
       `${API_URL}/v2/my/fs/dirs`,
       {
         path: dirPath,

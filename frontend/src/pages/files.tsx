@@ -1,8 +1,8 @@
 import { createDir, getFiles } from "@/api/file";
+import { DragAndDropFileUpload } from "@/components/drag-zone";
 import { FileItem } from "@/components/file-item";
 import { API_URL } from "@/constants";
 import { usePath } from "@/stores/path.store";
-import { getCwd } from "@/utils/storage.util";
 import { splitPaths } from "@/utils/string.util";
 import { BreadcrumbItem, Breadcrumbs } from "@heroui/breadcrumbs";
 import { Button } from "@heroui/button";
@@ -32,7 +32,7 @@ export default function FilesPage() {
   const [selectedFiles, setSelectedFiles] = useState<
     { name: string; isDir: boolean }[]
   >([]);
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["getFiles", path],
     queryFn: () => getFiles(path),
   });
@@ -89,6 +89,13 @@ export default function FilesPage() {
     }
   };
 
+  // onDrop = (ev: React.DragEvent<HTMLDivElement>) => {
+  //     if (ev.dataTransfer?.files?.length > 0) {
+  //       this.filesPanelRef.addFileList(ev.dataTransfer.files);
+  //     }
+  //     ev.preventDefault();
+  //   };
+
   if (isLoading || isPending) {
     return (
       <div className="flex items-center justify-center w-full h-full">
@@ -107,6 +114,7 @@ export default function FilesPage() {
 
   return (
     <section className="flex flex-col gap-8">
+      <DragAndDropFileUpload />
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2">
           <span className="font-semibold">Directory:</span>
@@ -190,13 +198,12 @@ export default function FilesPage() {
                     new FormData(e.currentTarget)
                   );
 
-                  await mutateAsync(`${data?.cwd}/${formData.name.toString()}`);
-                  if (isSuccess) {
-                    await queryClient.refetchQueries({
-                      queryKey: ["getFiles", path],
-                      type: "all", // or 'all'
-                    });
+                  const result = await mutateAsync(
+                    `${data?.cwd}/${formData.name.toString()}`
+                  );
+                  if (result.msg === "OK" || isSuccess) {
                     onClose();
+                    await refetch();
                   }
                 }}
               >
