@@ -113,7 +113,7 @@ export default function FilesPage() {
   }
 
   return (
-    <section className="flex flex-col gap-8">
+    <section className="relative flex flex-col gap-8">
       <DragAndDropFileUpload />
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2">
