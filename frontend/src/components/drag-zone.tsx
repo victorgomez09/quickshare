@@ -9,6 +9,7 @@ import React, {
   useEffect,
 } from "react";
 import { Button } from "@heroui/button";
+import { convertBytes } from "@/utils/bytes.util";
 
 // Define the type for the component's props
 interface DragAndDropFileUploadProps {
@@ -228,6 +229,8 @@ export const DragAndDropFileUpload: React.FC<DragAndDropFileUploadProps> = ({
           "Simulating upload for files:",
           selectedFiles.map((f) => f.name)
         );
+
+        selectedFiles.map((file) => console.log("file", file));
         await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate network delay
         setMessage("Files uploaded successfully!");
         setSelectedFiles([]); // Clear files after successful upload
@@ -322,7 +325,7 @@ export const DragAndDropFileUpload: React.FC<DragAndDropFileUploadProps> = ({
                     <span className="text-gray-700 font-medium truncate">
                       {file.name}
                       <span className="text-sm text-gray-500 ml-2">
-                        ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                        {convertBytes(file.size)}
                       </span>
                     </span>
                   </ListboxItem>

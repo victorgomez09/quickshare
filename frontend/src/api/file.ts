@@ -36,3 +36,23 @@ export const createDir = async (dirPath: string) => {
     )
   ).data;
 };
+
+export const uploadFile = async (
+  filePath: string,
+  content: string | ArrayBuffer,
+  offset: number
+) => {
+  return (
+    await axios.patch<{ msg: string }>(
+      `${API_URL}/v2/my/fs/files/chunks`,
+      {
+        path: filePath,
+        content,
+        offset,
+      },
+      {
+        withCredentials: true,
+      }
+    )
+  ).data;
+};

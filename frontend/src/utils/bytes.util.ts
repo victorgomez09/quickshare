@@ -1,7 +1,7 @@
-export function convertBytes(
+export const convertBytes = (
   bytes: number,
   options: { useBinaryUnits?: boolean; decimals?: number } = {}
-): string {
+): string => {
   const { useBinaryUnits = false, decimals = 2 } = options;
 
   if (decimals < 0) {
@@ -16,4 +16,4 @@ export function convertBytes(
   const i = Math.floor(Math.log(bytes) / Math.log(base));
 
   return `${(bytes / Math.pow(base, i)).toFixed(decimals)} ${units[i]}`;
-}
+};
